@@ -1,13 +1,14 @@
 # Mutator 2000
+Bluetooth Low Energy microphone mute button using Seeed Xiao BLE nRF52840. 
+Wired headphones have the advantage of usually being equipped with a remote that allows you to control microphone muting. Wireless devices often have a physical button on the headphones, but it’s hard to locate quickly when needed, or it only works on the hardware level (not supporting system mute), so you can’t tell whether the mic is muted or not. That’s why the Mutator2000 was created — an ultra-mobile, super small and extremely simple remote to control microphone muting via Bluetooth. 😎
 
-Bluetooth Low Energy microphone mute button using Seeed Xiao BLE nRF52840.
 
 ## Features
 
 - 🎤 **One-button microphone mute** - Press to toggle microphone mute
 - 🔋 **Battery monitoring** - Reports battery level via BLE Battery Service
-- 💤 **Power saving** - Auto-sleep after 10 minutes of inactivity
-- 🔄 **Easy pairing reset** - Hold button during startup to reset bonding
+- 💤 **Power saving** - Auto-sleep after 10 minutes of inactivity (only if not connected)
+- 🔄 **Easy pairing reset** - delete pair from system and hold button during startup to switch into pairing mode
 - 🎨 **LED status indicators**:
   - Cyan solid: Connected and ready
   - Cyan pulsing: Waiting for connection
@@ -17,8 +18,9 @@ Bluetooth Low Energy microphone mute button using Seeed Xiao BLE nRF52840.
 ## Hardware
 
 - **Board**: Seeed Xiao BLE nRF52840 Sense
-- **Power**: Li-Po battery (rechargeable via USB-C)
+- **Power**: Li-Po 150mAh battery (rechargeable via USB-C)
 - **Button**: Connected to pin 1 (built-in on Xiao)
+- **Switch**: Connected between BAT+ on Xiao and B+ on battery
 - **LED**: RGB LED (built-in)
 
 ## Wiring Diagram
@@ -42,53 +44,25 @@ Built-in RGB LED - status indicator
 
 ## Software Requirements
 
-- [PlatformIO](https://platformio.org/)
-- Platform: Nordic nRF52
-- Framework: Arduino
+- Seeed NRF52 Board lib
+- ArduinoBLE lib
+- Arduino IDE
 
 ## Installation and Compilation
 
-### Option 1: VSCode + PlatformIO (RECOMMENDED) ⭐
-
-1. **Install VSCode**
-   - Download from https://code.visualstudio.com/
-
-2. **Install PlatformIO extension**
-   - Open VSCode
-   - Extensions (Ctrl+Shift+X)
-   - Search "PlatformIO IDE"
-   - Click Install
-
-3. **Open project**
-   - File → Open Folder
-   - Select `Mutator2000` folder
-
-4. **Build and upload**
-   - Connect Xiao BLE via USB-C
-   - Click PlatformIO icon (alien) on left sidebar
-   - **Build** - compiles the project
-   - **Upload** - uploads to board
-   - **Monitor** - opens Serial Monitor
-   - Or use buttons on bottom bar
-
-5. **Keyboard shortcuts**
-   - `Ctrl+Alt+B` - Build
-   - `Ctrl+Alt+U` - Upload
-   - `Ctrl+Alt+S` - Serial Monitor
-
-### Option 2: Arduino IDE (if you prefer classic)
+### Arduino IDE 
 
 1. **Install Arduino IDE**
    - Download from https://www.arduino.cc/en/software
 
 2. **Add Board Support Package**
    - File → Preferences → Additional Boards Manager URLs:
-   - Add: `https://adafruit.github.io/arduino-board-index/package_adafruit_index.json`
-   - Tools → Board → Boards Manager → search "Adafruit nRF52" → Install
+   - Add: `[https://adafruit.github.io/arduino-board-index/package_adafruit_index.json](https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json)`
+   - Tools → Board → Boards Manager → search "Seeed nRF52 Boards" → Install
 
 3. **Install libraries**
    - Sketch → Include Library → Manage Libraries
-   - Install: **Adafruit TinyUSB Library**, **Adafruit LittleFS**
+   - Install: **ArduinoBLE**
 
 4. **Configuration**
    - **Board**: Tools → Board → Seeed nRF52 Boards → Seeed XIAO BLE - nRF52840
