@@ -51,7 +51,7 @@ bool timeoutEnabled = false;
 #define VBAT_PIN PIN_VBAT  // Built-in battery voltage divider pin
 #define VBAT_MV_PER_LSB (0.73242188F)  // 3.0V ADC range and 12-bit ADC (3000mV/4096)
 #define VBAT_DIVIDER (0.71275837F)     // Voltage divider 2M + 0.806M
-#define VBAT_DIVIDER_COMP (1.403F)     // Compensation factor
+#define VBAT_DIVIDER_COMP (1.4F)       // Compensation factor (needs calibration with multimeter)
 
 // Battery update interval (1 minute)
 const unsigned long BATTERY_UPDATE_INTERVAL = 60 * 1000;
@@ -342,14 +342,30 @@ float readBatteryVoltage() {
 }
 
 // Read battery percentage (0-100%)
-// Li-Po: 4.2V = 100%, 3.7V = 50%, 3.3V = 0%
+// Li-Po discharge curve based on voltage-capacity correlation
+// Data source: https://www.powerstream.com/lithium-ion-charge-voltage.htm
 uint8_t readBatteryPercent() {
   float voltage = readBatteryVoltage();
   
-  // Li-Po discharge curve approximation
-  if (voltage >= 4.2) return 100;
-  if (voltage <= 3.3) return 0;
+  // Voltage to percentage lookup table (voltage, percentage)
+  const float voltages[] = {3.30, 3.50, 3.60, 3.70, 3.80, 3.90, 4.00, 4.05, 4.10, 4.15, 4.20};
+  const uint8_t percentages[] = {0, 3, 5, 9, 36, 62, 73, 83, 89, 94, 100};
+  const int tableSize = 11;
   
-  // Linear approximation between 3.3V and 4.2V
-  return (uint8_t)((voltage - 3.3) * 111.11);
+  // Below minimum
+  if (voltage <= voltages[0]) return percentages[0];
+  // Above maximum
+  if (voltage >= voltages[tableSize - 1]) return percentages[tableSize - 1];
+  
+  // Find the two points to interpolate between
+  for (int i = 0; i < tableSize - 1; i++) {
+    if (voltage >= voltages[i] && voltage < voltages[i + 1]) {
+      // Linear interpolation between two points
+      float ratio = (voltage - voltages[i]) / (voltages[i + 1] - voltages[i]);
+      float percent = percentages[i] + ratio * (percentages[i + 1] - percentages[i]);
+      return (uint8_t)(percent + 0.5); // Round to nearest integer
+    }
+  }
+  
+  return 0; // Should never reach here
 }
