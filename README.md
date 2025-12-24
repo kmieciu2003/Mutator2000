@@ -36,6 +36,8 @@ Button:
 Built-in RGB LED - status indicator
 ```
 ![Schema](Mutator2000.png)
+![prototype photo 1](IMG_20251223_090633.jpg)
+![prototype photo 2](IMG_20251223_090650.jpg)
 
 ### Seeed Xiao BLE nRF52840 Pinout
 - **D1 (GPIO 1)** - Mute button
@@ -165,7 +167,8 @@ MIT License - open project, modify as needed!
 
 ## Contributing
 
-Suggestions and pull requests are welcome!
+Suggestions and pull requests are welcome! 
+Looking for someone who can create housing model for #D printer.
 
 ---
 
