@@ -35,6 +35,7 @@ Button:
 
 Built-in RGB LED - status indicator
 ```
+![Schema](Mutator2000.png)
 
 ### Seeed Xiao BLE nRF52840 Pinout
 - **D1 (GPIO 1)** - Mute button
@@ -104,7 +105,7 @@ Most communication apps allow custom shortcuts for mute:
 
 ### Change keyboard shortcut
 
-Edit in `Mutator2000.ino`, lines 16-17:
+Edit in `Mutator2000.ino`, lines 21-22:
 ```cpp
 #define MUTE_KEY HID_KEY_K
 #define MUTE_MODIFIERS (KEYBOARD_MODIFIER_LEFTGUI | KEYBOARD_MODIFIER_LEFTALT)
@@ -126,7 +127,7 @@ Seeed Xiao BLE has built-in Li-Po battery charging:
 - Charge via USB-C during use
 - Battery voltage: 3.7V nominal (3.0V - 4.2V range)
 - Current consumption: ~2mA (connected), ~1-2µA (deep sleep)
-- Estimated runtime: 50-100 hours on 100mAh battery
+- Estimated runtime: 50-100 hours on 150mAh battery
 
 ## Troubleshooting
 
@@ -143,6 +144,7 @@ Seeed Xiao BLE has built-in Li-Po battery charging:
 
 ### LED doesn't light up
 - LED lights up only when device is connected via Bluetooth
+- If Mutator2000 is connected to PC via USB cable check if it is not in file transfer mode
 - Check battery power
 
 ### Reset doesn't work
@@ -155,27 +157,6 @@ Seeed Xiao BLE has built-in Li-Po battery charging:
 ```cpp
 // In loop(), around line 230:
 const unsigned long CONNECTION_TIMEOUT = 10 * 60 * 1000; // Change 10 minutes to desired value
-```
-
-### Add vibration/buzzer
-```cpp
-#define BUZZER_PIN 2
-
-void setup() {
-  pinMode(BUZZER_PIN, OUTPUT);
-}
-
-void toggleMute() {
-  blehid.keyboardReport(MUTE_MODIFIERS, MUTE_KEY);
-  
-  // Short beep
-  digitalWrite(BUZZER_PIN, HIGH);
-  delay(50);
-  digitalWrite(BUZZER_PIN, LOW);
-  
-  delay(50);
-  blehid.keyRelease();
-}
 ```
 
 ## License
